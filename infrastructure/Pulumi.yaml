@@ -1,0 +1,3 @@
+name: react-template
+runtime: nodejs
+description: A static website on S3
