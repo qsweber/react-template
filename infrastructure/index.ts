@@ -26,10 +26,17 @@ const bucket = new aws.s3.Bucket(
     },
     websiteDomain: "s3-website-us-west-2.amazonaws.com",
     websiteEndpoint: `${bucket_name_and_url}.s3-website-us-west-2.amazonaws.com`,
-    acl: "public-read",
   },
   {
     protect: true,
+  },
+);
+
+const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
+  "public-access-block",
+  {
+    bucket: bucket.id,
+    blockPublicAcls: false,
   },
 );
 
@@ -86,4 +93,5 @@ const distribution = new aws.cloudfront.Distribution(
 );
 
 export const bucketId = bucket.id;
+export const publicAccessBlockId = publicAccessBlock.id;
 export const distributionId = distribution.id;
