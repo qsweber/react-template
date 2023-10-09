@@ -26,6 +26,7 @@ const bucket = new aws.s3.Bucket(
     },
     websiteDomain: "s3-website-us-west-2.amazonaws.com",
     websiteEndpoint: `${bucket_name_and_url}.s3-website-us-west-2.amazonaws.com`,
+    acl: "public-read",
   },
   {
     protect: true,
