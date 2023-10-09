@@ -1,4 +1,4 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 import styled from "@emotion/styled";
 
@@ -29,12 +29,6 @@ const SpacedNavLink = styled(NavLink)(() => ({
   textDecoration: "none",
   color: "inherit",
   fontWeight: "600",
-}));
-
-const ContactImg = styled.img(() => ({
-  width: 35,
-  height: 35,
-  paddingRight: 5,
 }));
 
 const Footer = styled.footer(() => ({
