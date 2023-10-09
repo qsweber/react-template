@@ -42,7 +42,7 @@ const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
 );
 
 const bucketPolicy = new aws.s3.BucketPolicy(
-  `${bucket}-bucket-policy`,
+  "bucketPolicy",
   {
     bucket: bucket.id, // refer to the bucket created earlier
     policy: pulumi.jsonStringify({
@@ -71,7 +71,7 @@ const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
 );
 
 const distribution = new aws.cloudfront.Distribution(
-  `${bucket}-distribution`,
+  `distribution`,
   {
     aliases: [bucket_name_and_url],
     defaultCacheBehavior: {
@@ -118,7 +118,7 @@ const distribution = new aws.cloudfront.Distribution(
     },
   },
   {
-    protect: false,
+    protect: true,
   },
 );
 
