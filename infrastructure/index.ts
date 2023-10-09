@@ -118,7 +118,7 @@ const distribution = new aws.cloudfront.Distribution(
     },
   },
   {
-    protect: true,
+    protect: false,
   },
 );
 
