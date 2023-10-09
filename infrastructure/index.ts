@@ -34,7 +34,7 @@ const bucket = new aws.s3.Bucket(
 );
 
 const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
-  "public-access-block",
+  `${bucket}-public-access-block`,
   {
     bucket: bucket.id,
     blockPublicAcls: false,
@@ -42,7 +42,7 @@ const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
 );
 
 const bucketPolicy = new aws.s3.BucketPolicy(
-  "bucketPolicy",
+  `${bucket}-bucket-policy`,
   {
     bucket: bucket.id, // refer to the bucket created earlier
     policy: pulumi.jsonStringify({
@@ -60,8 +60,18 @@ const bucketPolicy = new aws.s3.BucketPolicy(
   { dependsOn: publicAccessBlock },
 );
 
+const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
+  `${bucket}-ownership-controls`,
+  {
+    bucket: bucket.id,
+    rule: {
+      objectOwnership: "ObjectWriter",
+    },
+  },
+);
+
 const distribution = new aws.cloudfront.Distribution(
-  "distribution",
+  `${bucket}-distribution`,
   {
     aliases: [bucket_name_and_url],
     defaultCacheBehavior: {
@@ -115,4 +125,6 @@ const distribution = new aws.cloudfront.Distribution(
 export const bucketId = bucket.id;
 export const publicAccessBlockId = publicAccessBlock.id;
 export const bucketPolicyId = bucketPolicy.id;
+export const exampleBucketOwnershipControlsId =
+  exampleBucketOwnershipControls.id;
 export const distributionId = distribution.id;
