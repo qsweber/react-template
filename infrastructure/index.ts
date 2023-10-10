@@ -34,7 +34,7 @@ const bucket = new aws.s3.Bucket(
 );
 
 const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
-  `${bucket}-public-access-block`,
+  `${bucket_name_and_url}-public-access-block`,
   {
     bucket: bucket.id,
     blockPublicAcls: false,
@@ -42,7 +42,7 @@ const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
 );
 
 const bucketPolicy = new aws.s3.BucketPolicy(
-  "bucketPolicy",
+  `${bucket_name_and_url}-bucket-policy`,
   {
     bucket: bucket.id, // refer to the bucket created earlier
     policy: pulumi.jsonStringify({
@@ -61,7 +61,7 @@ const bucketPolicy = new aws.s3.BucketPolicy(
 );
 
 const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
-  `${bucket}-ownership-controls`,
+  `${bucket_name_and_url}-ownership-controls`,
   {
     bucket: bucket.id,
     rule: {
@@ -71,7 +71,7 @@ const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
 );
 
 const distribution = new aws.cloudfront.Distribution(
-  `distribution`,
+  `${bucket_name_and_url}-distribution`,
   {
     aliases: [bucket_name_and_url],
     defaultCacheBehavior: {
@@ -122,9 +122,9 @@ const distribution = new aws.cloudfront.Distribution(
   },
 );
 
-export const bucketId = bucket.id;
-export const publicAccessBlockId = publicAccessBlock.id;
-export const bucketPolicyId = bucketPolicy.id;
-export const exampleBucketOwnershipControlsId =
-  exampleBucketOwnershipControls.id;
-export const distributionId = distribution.id;
+export const bucketUrn = bucket.urn;
+export const publicAccessBlockUrn = publicAccessBlock.urn;
+export const bucketPolicyUrn = bucketPolicy.urn;
+export const exampleBucketOwnershipControlsUrn =
+  exampleBucketOwnershipControls.urn;
+export const distributionUrn = distribution.urn;
