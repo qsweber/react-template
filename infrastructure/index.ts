@@ -1,14 +1,15 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
-const bucket_name_and_url = "template.quinnweber.com";
+const config = new pulumi.Config();
+const bucketNameAndUrl = config.require("bucket");
 
 // Create a bucket and expose a website index document
 const bucket = new aws.s3.Bucket(
-  bucket_name_and_url,
+  bucketNameAndUrl,
   {
-    arn: `arn:aws:s3:::${bucket_name_and_url}`,
-    bucket: bucket_name_and_url,
+    arn: `arn:aws:s3:::${bucketNameAndUrl}`,
+    bucket: bucketNameAndUrl,
     hostedZoneId: "Z3BJ6K6RIION7M",
     requestPayer: "BucketOwner",
     serverSideEncryptionConfiguration: {
@@ -22,11 +23,11 @@ const bucket = new aws.s3.Bucket(
       enabled: true,
     },
     website: {
-      errorDocument: "error.html",
+      errorDocument: "index.html",
       indexDocument: "index.html",
     },
     websiteDomain: "s3-website-us-west-2.amazonaws.com",
-    websiteEndpoint: `${bucket_name_and_url}.s3-website-us-west-2.amazonaws.com`,
+    websiteEndpoint: `${bucketNameAndUrl}.s3-website-us-west-2.amazonaws.com`,
   },
   {
     protect: true,
@@ -34,7 +35,7 @@ const bucket = new aws.s3.Bucket(
 );
 
 const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
-  `${bucket_name_and_url}-public-access-block`,
+  `${bucketNameAndUrl}-public-access-block`,
   {
     bucket: bucket.id,
     blockPublicAcls: false,
@@ -42,7 +43,7 @@ const publicAccessBlock = new aws.s3.BucketPublicAccessBlock(
 );
 
 const bucketPolicy = new aws.s3.BucketPolicy(
-  `${bucket_name_and_url}-bucket-policy`,
+  `${bucketNameAndUrl}-bucket-policy`,
   {
     bucket: bucket.id, // refer to the bucket created earlier
     policy: pulumi.jsonStringify({
@@ -61,7 +62,7 @@ const bucketPolicy = new aws.s3.BucketPolicy(
 );
 
 const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
-  `${bucket_name_and_url}-ownership-controls`,
+  `${bucketNameAndUrl}-ownership-controls`,
   {
     bucket: bucket.id,
     rule: {
@@ -71,9 +72,9 @@ const exampleBucketOwnershipControls = new aws.s3.BucketOwnershipControls(
 );
 
 const distribution = new aws.cloudfront.Distribution(
-  `${bucket_name_and_url}-distribution`,
+  `${bucketNameAndUrl}-distribution`,
   {
-    aliases: [bucket_name_and_url],
+    aliases: [bucketNameAndUrl],
     defaultCacheBehavior: {
       allowedMethods: ["GET", "HEAD"],
       cachedMethods: ["GET", "HEAD"],
@@ -87,7 +88,7 @@ const distribution = new aws.cloudfront.Distribution(
       },
       maxTtl: 31536000,
       minTtl: 31536000,
-      targetOriginId: `S3-Website-${bucket_name_and_url}.s3-website-us-west-2.amazonaws.com`,
+      targetOriginId: `S3-Website-${bucketNameAndUrl}.s3-website-us-west-2.amazonaws.com`,
       viewerProtocolPolicy: "redirect-to-https",
     },
     defaultRootObject: "index.html",
@@ -102,7 +103,7 @@ const distribution = new aws.cloudfront.Distribution(
           originSslProtocols: ["TLSv1", "TLSv1.1", "TLSv1.2"],
         },
         domainName: bucket.websiteEndpoint,
-        originId: `S3-Website-${bucket_name_and_url}.s3-website-us-west-2.amazonaws.com`,
+        originId: `S3-Website-${bucketNameAndUrl}.s3-website-us-west-2.amazonaws.com`,
       },
     ],
     restrictions: {
@@ -112,7 +113,7 @@ const distribution = new aws.cloudfront.Distribution(
     },
     viewerCertificate: {
       acmCertificateArn:
-        "arn:aws:acm:us-east-1:120356305272:certificate/10f59a3f-a08e-4b8d-8a4c-f0a5fcb61e83",
+        "arn:aws:acm:us-east-1:120356305272:certificate/a67eeb43-7782-4e8f-b79f-d3dd1d40baa3",
       minimumProtocolVersion: "TLSv1.2_2021",
       sslSupportMethod: "sni-only",
     },
