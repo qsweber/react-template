@@ -60,7 +60,6 @@ export const Layout = () => (
     </NavBar>
     <Outlet />
     <Footer>
-      <hr />
       <p>Thanks for visiting!</p>
     </Footer>
   </Container>
