@@ -113,7 +113,7 @@ const distribution = new aws.cloudfront.Distribution(
     },
     viewerCertificate: {
       acmCertificateArn:
-        "arn:aws:acm:us-east-1:120356305272:certificate/a67eeb43-7782-4e8f-b79f-d3dd1d40baa3",
+        "arn:aws:acm:us-east-1:120356305272:certificate/10f59a3f-a08e-4b8d-8a4c-f0a5fcb61e83",
       minimumProtocolVersion: "TLSv1.2_2021",
       sslSupportMethod: "sni-only",
     },
