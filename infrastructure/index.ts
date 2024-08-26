@@ -123,9 +123,36 @@ const distribution = new aws.cloudfront.Distribution(
   },
 );
 
+const zone = new aws.route53.Zone(
+  "www.quinnweber.com-zone",
+  {
+    comment: "",
+    name: "quinnweber.com",
+  },
+  {
+    protect: true,
+  },
+);
+
+const cNameRecord = new aws.route53.Record(
+  `${bucketNameAndUrl}-cname-record`,
+  {
+    name: bucketNameAndUrl,
+    records: [distribution.domainName.apply((t) => t)],
+    ttl: 3600,
+    type: aws.route53.RecordType.CNAME,
+    zoneId: zone.id,
+  },
+  {
+    protect: true,
+  },
+);
+
 export const bucketUrn = bucket.urn;
 export const publicAccessBlockUrn = publicAccessBlock.urn;
 export const bucketPolicyUrn = bucketPolicy.urn;
 export const exampleBucketOwnershipControlsUrn =
   exampleBucketOwnershipControls.urn;
 export const distributionUrn = distribution.urn;
+export const zoneUrn = zone.urn;
+export const cNameRecordUrn = cNameRecord.urn;
