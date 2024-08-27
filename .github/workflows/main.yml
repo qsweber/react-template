@@ -16,6 +16,7 @@ jobs:
           node-version: 18
       - run: npm install
       - run: npm run test
+      - run: npx 
   build:
     runs-on: ubuntu-latest
     steps:
