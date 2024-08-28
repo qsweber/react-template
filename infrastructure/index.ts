@@ -148,6 +148,29 @@ const cNameRecord = new aws.route53.Record(
   },
 );
 
+const pool = new aws.cognito.UserPool(`${bucketNameAndUrl}-pool`, {
+  name: `${bucketNameAndUrl}-pool`,
+  autoVerifiedAttributes: ["email"],
+  usernameAttributes: ["email"],
+});
+
+const client = new aws.cognito.UserPoolClient(`${bucketNameAndUrl}-client`, {
+  name: `${bucketNameAndUrl}-client`,
+  userPoolId: pool.id,
+  supportedIdentityProviders: ["COGNITO"],
+  callbackUrls: [`https://${bucketNameAndUrl}/login`],
+  allowedOauthFlows: ["code", "implicit"],
+  allowedOauthScopes: ["email", "openid"],
+});
+
+const poolDomain = new aws.cognito.UserPoolDomain(
+  `${bucketNameAndUrl}-pool-domain`,
+  {
+    domain: bucketNameAndUrl.replace(/\./g, "-"),
+    userPoolId: pool.id,
+  },
+);
+
 export const bucketUrn = bucket.urn;
 export const publicAccessBlockUrn = publicAccessBlock.urn;
 export const bucketPolicyUrn = bucketPolicy.urn;
@@ -156,3 +179,6 @@ export const exampleBucketOwnershipControlsUrn =
 export const distributionUrn = distribution.urn;
 export const zoneUrn = zone.urn;
 export const cNameRecordUrn = cNameRecord.urn;
+export const poolUrn = pool.urn;
+export const clientUrn = client.urn;
+export const poolDomainUrn = poolDomain.urn;
